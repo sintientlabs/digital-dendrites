@@ -1,6 +1,6 @@
-# Sintient Labs Website
+# Digital Dendrites
 
-A modern, responsive website for sintientlabs.com built with HTML, CSS, and JavaScript. Features a clean design, interactive elements, and ready-to-deploy configurations for multiple platforms.
+The official website for Sintient Labs - exploring the neural pathways of artificial intelligence through modern web design. Built with HTML, CSS, and JavaScript, featuring a clean design, interactive elements, and ready-to-deploy configurations for multiple platforms.
 
 ## 🚀 Quick Start
 
@@ -13,13 +13,14 @@ This is a static website that can be deployed to any static hosting provider. Th
 ## 📁 Project Structure
 
 ```
-sintientlabs-site/
+digital-dendrites/
 ├── index.html          # Main HTML file
 ├── styles.css          # CSS styles
 ├── script.js           # JavaScript functionality
 ├── netlify.toml        # Netlify configuration
 ├── vercel.json         # Vercel configuration
 ├── CNAME               # GitHub Pages custom domain
+├── WARP.md            # Development guidance
 └── README.md           # This file
 ```
 
@@ -34,7 +35,7 @@ Netlify provides the easiest deployment with built-in form handling.
    ```bash
    git add .
    git commit -m "Initial commit"
-   git remote add origin https://github.com/yourusername/sintientlabs-site.git
+   git remote add origin https://github.com/sintientlabs/digital-dendrites.git
    git branch -M main
    git push -u origin main
    ```
