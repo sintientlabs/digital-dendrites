@@ -1,0 +1,47 @@
+# Base44 sandbox environment for Digital Dendrites (sintientlabs.com).
+#
+# This repo is a pure static site (index.html + styles.css + script.js): no build
+# step, no dependencies, no backend. The web entry point therefore just serves the
+# cloned source directly from a bind mount, so edits in the repo show up
+# immediately (no live-reload dev server exists for plain static files — the
+# preview is refreshed after edits instead).
+#
+# There are no external services and no credentials required:
+#   - the contact form is handled by Netlify Forms on deploy (`data-netlify="true"`,
+#     no action URL), so nothing to submit to locally.
+#   - Inter font is fetched from Google Fonts over HTTPS by the browser.
+services:
+  web:
+    image: nginx:alpine
+    restart: on-failure
+    labels:
+      base44.project: "Digital Dendrites"
+      base44.kind: "web"
+      base44.port: "3000"
+    ports:
+      - "3000:80"
+    # The sandbox clones the repo as root with mode 700, which nginx's unprivileged
+    # worker cannot traverse (403/404 on every asset). Relax the mounted directory
+    # itself (the files inside stay 644) before handing off to nginx; idempotent, so
+    # it also self-heals if the clone's permissions are reset. The content mount is
+    # therefore read-write even though nginx only ever reads it.
+    command:
+      [
+        "sh",
+        "-ec",
+        "chmod 755 /usr/share/nginx/html; exec nginx -g 'daemon off;'",
+      ]
+    volumes:
+      - ./:/usr/share/nginx/html
+      - ./.base44/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    healthcheck:
+      # Probe the real page and its stylesheet, not just the open port.
+      test:
+        [
+          "CMD-SHELL",
+          "wget -qO- http://127.0.0.1/ | grep -q 'Sintient Labs' && wget -qO- http://127.0.0.1/styles.css | grep -q 'font-family' || { echo 'healthcheck failed: index.html or styles.css not served'; exit 1; }",
+        ]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+      start_period: 5s
